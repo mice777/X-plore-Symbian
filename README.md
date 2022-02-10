@@ -1,6 +1,6 @@
 X-plore for Symbian
 
-[X-plore app on Symbian phone small screen](https://www.lonelycatgames.com/wp-content/uploads/x-plore/symbian-shot2.jpg)
+![X-plore app on Symbian phone small screen](https://www.lonelycatgames.com/wp-content/uploads/x-plore/symbian-shot2.jpg)
 
 What is X-plore for Symbian? It was once very popular file manager for then popular mobile phones with Symbian OS. 
 It was developed since 2004, and was since then top tool for Symbian, until Nokia and Symbian died in around 2013.  
