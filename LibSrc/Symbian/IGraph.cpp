@@ -376,7 +376,15 @@ class IGraph_imp: public IGraph, public C_cc{
             case EStdKeyIncVolume: bits |= GKEY_VOLUME_UP; break;
             case EStdKeyDecVolume: bits |= GKEY_VOLUME_DOWN; break;
 
-#if defined S60
+#if defined S80
+                              //Series 80: four command buttons right of the screen (Device0..3, top to bottom),
+                              // rocker select = Device7
+            case EStdKeyDevice0: bits |= GKEY_SOFT_MENU; break;
+            case EStdKeyDevice3: bits |= GKEY_SOFT_SECONDARY; break;
+            case EStdKeyDevice7: bits |= GKEY_OK; break;
+            case EStdKeyRightCtrl:
+            case EStdKeyLeftCtrl: bits |= GKEY_CTRL; break;
+#elif defined S60
             case EStdKeyDevice0: bits |= GKEY_SOFT_MENU; break;
             case EStdKeyDevice1: bits |= GKEY_SOFT_SECONDARY; break;
             case EStdKeyDevice3: bits |= GKEY_OK; break;
@@ -428,7 +436,12 @@ class IGraph_imp: public IGraph, public C_cc{
                case EStdKeyBackspace: k = K_DEL; break;
                case EStdKeyEnter: k = K_ENTER; break;
                case EStdKeyDevice0: k = K_LEFT_SOFT; break;
+#ifdef S80
                case EStdKeyDevice3: k = K_RIGHT_SOFT; break;
+               case EStdKeyDevice7: k = K_ENTER; break;
+#else
+               case EStdKeyDevice3: k = K_RIGHT_SOFT; break;
+#endif
                }
             }else
 #endif
@@ -531,7 +544,12 @@ class IGraph_imp: public IGraph, public C_cc{
                   case EStdKeyEnd: k = K_END; break;
                   case EStdKeyPageUp: k = K_PAGE_UP; break;
                   case EStdKeyPageDown: k = K_PAGE_DOWN; break;
-#if defined S60
+#if defined S80
+                  case EStdKeyDevice0: k = K_LEFT_SOFT; break;
+                  case EStdKeyDevice1: k = K_ENTER; break;
+                  case EStdKeyDevice3: k = K_RIGHT_SOFT; break;
+                  case EStdKeyDevice7: k = K_ENTER; break;
+#elif defined S60
                   case EStdKeyDevice0: k = K_LEFT_SOFT; break;
                   case EStdKeyDevice1: k = K_RIGHT_SOFT; break;
                   case EStdKeyDevice3: k = K_ENTER; break;
@@ -619,7 +637,13 @@ class IGraph_imp: public IGraph, public C_cc{
             case EStdKeyIncVolume: bits &= ~GKEY_VOLUME_UP; break;
             case EStdKeyDecVolume: bits &= ~GKEY_VOLUME_DOWN; break;
 
-#if defined S60
+#if defined S80
+            case EStdKeyDevice0: bits &= ~GKEY_SOFT_MENU; break;
+            case EStdKeyDevice3: bits &= ~GKEY_SOFT_SECONDARY; break;
+            case EStdKeyDevice7: bits &= ~GKEY_OK; break;
+            case EStdKeyRightCtrl:
+            case EStdKeyLeftCtrl: bits &= ~GKEY_CTRL; break;
+#elif defined S60
             case EStdKeyDevice0: bits &= ~GKEY_SOFT_MENU; break;
             case EStdKeyDevice1: bits &= ~GKEY_SOFT_SECONDARY; break;
             case EStdKeyDevice3: bits &= ~GKEY_OK; break;
@@ -1204,7 +1228,7 @@ class IGraph_imp: public IGraph, public C_cc{
       if(app->ig_flags&IG_SCREEN_USE_CLIENT_RECT){
          const S_global_data *gd = GetGlobalData();
          TRect rcc = gd->GetAppUi()->ClientRect();
-#ifdef S60
+#if defined S60 && !defined S80
                               //always fill screen fully at right and bottom
          rcc.iBr.iX = full_scrn_sx;
          rcc.iBr.iY = full_scrn_sy;

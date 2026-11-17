@@ -1,0 +1,62 @@
+// X-plore for Nokia 9300/9500 (Series 80 DP 2.0, Symbian OS 7.0s)
+// Port of the public-domain X-plore for Symbian by Lonely Cat Games.
+
+TARGET        xplore.app
+TARGETTYPE    app
+UID           0x100039CE 0x20009598
+TARGETPATH    \system\apps\xplore
+LANG          SC
+
+MACRO         S60
+MACRO         S80
+MACRO         EXPLORER
+
+// Same as the original X-plore build (Tools/VS2005Rules). GCC 2.9 only emits the
+// virtual functions of function-local classes with -Os -fno-default-inline together.
+OPTION        GCC -Os -fno-default-inline -fno-builtin -fno-rtti -w
+
+// Platform library (LibSrc/Symbian + LibSrc/Common)
+SOURCEPATH    ..\LibSrc\Common
+SOURCE        Base64.cpp Bits.cpp C_file_base.cpp C_math.cpp C_vector.cpp Cstr.cpp
+SOURCE        Fixed.cpp Md5.cpp Memory.cpp Network.cpp Profiler.cpp QuickSort.cpp RndGen.cpp
+SOURCE        SocketBase.cpp TextUtils.cpp Thread.cpp TimeDate.cpp TinyEncrypt.cpp Xml.cpp
+SOURCE        ZipCreate.cpp ZipRawFile.cpp ZipRead.cpp Graphics.cpp Image.cpp
+SOURCE        SoundBase.cpp SoundMixer.cpp Config.cpp Mode.cpp
+SOURCEPATH    ..\LibSrc\Common\UserInterface
+SOURCE        About.cpp FatalError.cpp FormattedMessage.cpp InfoMessage.cpp MultiQuestion.cpp
+SOURCE        Question.cpp TextEdit.cpp TextEntry.cpp UserInterface.cpp
+SOURCEPATH    ..\LibSrc\Symbian
+SOURCE        C_file.cpp Directory.cpp GlobalData.cpp Lang.cpp LogMan.cpp Panic.cpp
+SOURCE        Socket.cpp SymbianAppStart.cpp System.cpp ThreadSymbian.cpp TickCount.cpp
+SOURCE        TimeDateSymbian.cpp Vibration.cpp IGraph.cpp Skins.cpp SndPlayer.cpp
+SOURCE        TextEditSymbian.cpp E32Dll.cpp
+
+// Image loaders
+SOURCEPATH    ..\LibSrc\ImgLib
+SOURCE        BMP\ImgLoadBMP.cpp GIF\ImgLoadGIF.cpp ICO\ImgLoadICO.cpp JPG\ImgLoadJPG.cpp
+SOURCE        PCX\ImgLoadPCX.cpp PNG\ImgLoadPNG.cpp PNG\Png.cpp PNG\PngError.cpp PNG\PngMem.cpp
+SOURCE        PNG\PngRead.cpp PNG\Pngrio.cpp PNG\Pngrtran.cpp PNG\Pngrutil.cpp PNG\PngSet.cpp
+SOURCE        PNG\PngTrans.cpp
+
+// The application
+SOURCEPATH    ..\LcgApps\src
+SOURCE        AudioPreview.cpp BtSend.cpp FileBrowser.cpp ImageViewer.cpp Main.cpp
+SOURCE        Parser.cpp ScanDirs.cpp SimpleSoundPlayer.cpp Viewer.cpp
+SOURCE        Explorer\Explorer.cpp Explorer\Rar.cpp Explorer\VideoPreview.cpp
+
+SOURCEPATH    wrap
+SOURCE        AppGraphics.cpp
+
+SOURCEPATH    data
+RESOURCE      xplore.rss
+
+AIF           xplore.aif aif xploreaif.rss c8,1 icon44.bmp icon44_mask.bmp icon42x29.bmp icon42x29_mask.bmp
+
+SYSTEMINCLUDE \epoc32\include \epoc32\include\libc
+USERINCLUDE   ..\Include ..\LibSrc\Symbian ..\LibSrc\Common ..\LcgApps\src ..\LcgApps\src\Explorer
+
+LIBRARY       euser.lib apparc.lib cone.lib eikcore.lib eikcoctl.lib ws32.lib bitgdi.lib fbscli.lib
+LIBRARY       efsrv.lib bafl.lib gdi.lib hal.lib msgs.lib insock.lib esock.lib ezlib.lib commdb.lib
+LIBRARY       plpvariant.lib apgrfx.lib sdpagent.lib sdpdatabase.lib btextnotifiers.lib bluetooth.lib
+LIBRARY       mediaclientaudio.lib mediaclientaudiostream.lib cntmodel.lib fepbase.lib irobex.lib
+LIBRARY       securesocket.lib charconv.lib etel.lib estor.lib etext.lib estlib.lib sysagt.lib

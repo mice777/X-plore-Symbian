@@ -1,0 +1,13 @@
+#include <aiftool.rh>
+
+RESOURCE AIF_DATA
+    {
+    caption_list =
+        {
+        CAPTION { code = ELangEnglish; caption = "X-plore"; }
+        };
+    app_uid = 0x20009598;
+    num_icons = 2;
+    embeddability = KAppNotEmbeddable;
+    newfile = KAppDoesNotSupportNewFile;
+    }
