@@ -198,6 +198,23 @@ void C_text_editor::ClipboardCopy(const wchar *text){
 }
 
 //----------------------------
+#ifdef S80
+                              //Series 80 CEikEdwin doesn't export CcpuCanPaste: look at the clipboard directly
+static bool ClipboardHasTextL(){
+   CClipboard *cb = CClipboard::NewForReadingL(CCoeEnv::Static()->FsSession());
+   bool ret = (cb->StreamDictionary().At(KClipboardUidTypePlainText) != KNullStreamId);
+   delete cb;
+   return ret;
+}
+
+static bool ClipboardHasText(){
+   bool ret = false;
+   TRAPD(err, ret = ClipboardHasTextL());
+   return (!err && ret);
+}
+#endif
+
+//----------------------------
 
 Cstr_w C_text_editor::ClipboardGet(){
 
@@ -219,7 +236,7 @@ Cstr_w C_text_editor::ClipboardGet(){
 
 //----------------------------
 
-#ifdef S60
+#if defined S60 && !defined S80
 #include <AknIndicatorContainer.h>
 #include <AknEnv.h>
 #include <avkon.hrh>
@@ -471,7 +488,9 @@ class C_text_editor_Symbian: public C_text_editor_common,
 
 //----------------------------
 
-#ifdef S60
+#ifdef S80
+   bool IsT9() const{ return false; }   //Series 80: QWERTY keyboard, no T9
+#elif defined S60
    bool IsT9() const{
       MAknEditingStateIndicator *ei = CAknEnv::Static()->EditingStateIndicator();
       if(!ei)
@@ -732,7 +751,7 @@ class C_text_editor_Symbian: public C_text_editor_common,
 //----------------------------
 #ifndef DEBUG_EDWIN
 
-#ifdef S60
+#if defined S60 && !defined S80
 public:
    CAknEdwinState *GetState(){
       if(!fte)
@@ -840,7 +859,9 @@ private:
             break;
             */
 
-#ifdef S60
+#ifdef S80
+         case EKeyDevice7:    //rocker select
+#elif defined S60
          case EKeyDevice3:
 #else
 #error
@@ -891,7 +912,7 @@ private:
       if(allowed&CASE_CAPITAL)
          allowed = CASE_ALL;
       C_text_editor_common::SetCase(allowed, curr);
-#ifdef S60
+#if defined S60 && !defined S80
 #ifndef DEBUG_EDWIN
       CAknEdwinState *state = GetState();
       if(state){
@@ -971,7 +992,7 @@ public:
       if(te_flags&TXTED_READ_ONLY)
          CEikEdwin::SetReadOnly(true);
       CEikEdwin::SetTextLimit(GetMaxLength());
-#ifdef S60
+#if defined S60 && !defined S80
 #ifndef DEBUG_EDWIN
       InputCapabilities();
       CAknEdwinState *state = GetState();
@@ -1011,8 +1032,10 @@ public:
          cfm.SetAttrib(EAttFontHeight);
          cfm.SetAttrib(EAttFontPosture);
 
+#ifndef S80                  //not exported by the Series 80 CEikEdwin; it keeps the system font
          CCharFormatLayer* cCharFL = CCharFormatLayer::NewL(cf, cfm);
          SetCharFormatLayer(cCharFL);
+#endif
 
          //SetBorder(TGulBorder::EFlat | TGulBorder::EOneStep | TGulBorder::EAddOnePixel);
       }
@@ -1128,7 +1151,11 @@ public:
    virtual bool CanPaste() const{
       if(mask_password)
          return false;
+#ifdef S80
+      return ClipboardHasText();
+#else
       return CcpuCanPaste();
+#endif
    }
 //----------------------------
    virtual void Paste(){
@@ -1185,7 +1212,7 @@ void C_application_ui::DrawTextEditorState(const C_text_editor &te, dword &soft_
 
    S_rect rc_icon(0, 0, 0, text_edit_state_icons->SizeY());
    S_rect rc_icon1 = rc_icon;
-#if defined __SYMBIAN32__ && defined S60
+#if defined __SYMBIAN32__ && defined S60 && !defined S80
    MAknEditingStateIndicator *ei = CAknEnv::Static()->EditingStateIndicator();
    if(!ei)
       return;

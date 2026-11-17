@@ -1,0 +1,13 @@
+; X-plore for Nokia 9300/9500 (Series 80 DP 2.0)
+; Port of X-plore for Symbian by Lonely Cat Games (public domain, Apache 2.0 licence).
+&EN
+#{"X-plore"},(0x20009598),1,65,0
+
+; Series 80 Developer Platform 2.0
+(0x101F8ED2),0,0,0,{"Series80ProductID"}
+
+"xplore.app"-"!:\system\apps\xplore\xplore.app"
+"xplore.rsc"-"!:\system\apps\xplore\xplore.rsc"
+"xplore.aif"-"!:\system\apps\xplore\xplore.aif"
+"Data.dta"-"!:\system\apps\xplore\Explorer\Data.dta"
+"..\..\LcgApps\res\Explorer\License.txt"-"!:\system\apps\xplore\Explorer\License.txt"

@@ -1,0 +1,10 @@
+// X-plore for Nokia 9300/9500 (Series 80)
+NAME XPLR
+
+#include <eikon.rh>
+
+RESOURCE RSS_SIGNATURE { }
+RESOURCE TBUF { buf = "X-plore"; }
+
+// X-plore draws its own menus and soft-key labels; no Uikon menu or command buttons.
+RESOURCE EIK_APP_INFO { }

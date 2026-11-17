@@ -5,7 +5,14 @@
 
 #include <EikApp.h>
 
-#if defined S60
+#if defined S80
+                              //Series 80 (Nokia 9300/9500): plain Uikon, no Avkon
+#include <EikAppUi.h>
+#include <EikBtGpc.h>
+#define CDOCUMENT CEikDocument
+#define CAPPUI CEikAppUi
+#define CAPPLICATION CEikApplication
+#elif defined S60
 #include <AknView.h>
 #include <AknViewAppUi.h>
 #include <AknApp.h>
@@ -197,7 +204,7 @@ public:
       app_base(NULL),
       want_quit(false),
       has_focus(true),
-#ifdef S60
+#if defined S60 && !defined S80
       view(NULL),
 #endif
       timer_manager(this)
@@ -526,7 +533,7 @@ public:
       }
    }
 
-#ifdef S60
+#if defined S60 && !defined S80
 
    class C_view: public CAknView{
       CCoeControl *cc;
@@ -562,7 +569,7 @@ public:
 #endif
 
    void InitView(IGraph *ig, CAPPUI *app_ui){
-#if defined S60
+#if defined S60 && !defined S80
       CCoeControl *cc = NULL;
       if(ig)
          cc = ig->GetCoeControl();
@@ -649,6 +656,9 @@ void C_application_base::InitInputCaps(){
    //if(!err && val!=0)
       //has_kb = true;
    has_kb = true;
+#ifdef S80
+   has_full_kb = true;        //Nokia 9300/9500: full QWERTY keyboard
+#endif
 
 #if defined S60 && defined __SYMBIAN_3RD__
    if(has_kb){
@@ -904,7 +914,7 @@ class C_eik_application: public CAPPLICATION{
             cflg |= EAknEnableSkinFlag;
             cflg |= 0x00800000;  //EAknTouchCompatibleFlag
 #endif
-#ifndef __SYMBIAN_3RD__
+#if !defined __SYMBIAN_3RD__ && !defined S80
             cflg |= ELayoutAwareAppFlag;
 #endif
             BaseConstructL(cflg);
@@ -963,7 +973,7 @@ class C_eik_application: public CAPPLICATION{
             }
             delete cline;
 #endif
-#ifdef S60
+#if defined S60 && !defined S80
             SetKeyBlockMode(ENoKeyBlock);
 #endif
          }
@@ -1139,6 +1149,13 @@ EXPORT_C CApaApplication *SymbianMain(){
 #endif
    return new(true) C_eik_application;
 }
+
+#ifdef S80
+                              //Series 80 apps are built by abld, which exports NewApplication at ordinal 1
+EXPORT_C CApaApplication *NewApplication(){
+   return SymbianMain();
+}
+#endif
 
 //----------------------------
 
